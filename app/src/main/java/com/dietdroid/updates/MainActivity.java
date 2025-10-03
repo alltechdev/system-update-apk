@@ -37,6 +37,7 @@ import okhttp3.RequestBody;
 import okhttp3.MediaType;
 
 public class MainActivity extends AppCompatActivity {
+    // Main activity for system update application
     private static final String TAG = "SystemUpdate";
     private static final String VERSION_URL = "https://api.github.com/repos/alltechdev/alltech.dev/contents/system_update.json";
     private static final String DEVICE_PING_URL = "https://httpbin.org/post"; // Test HTTP endpoint for device registration
