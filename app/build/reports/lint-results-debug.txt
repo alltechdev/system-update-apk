@@ -1,0 +1,330 @@
+/home/asternheim/system-update/app/src/main/AndroidManifest.xml:6: Warning: WRITE_EXTERNAL_STORAGE is deprecated (and is not granted) when targeting Android 13+. If you need to write to shared storage, use the MediaStore.createWriteRequest intent. [ScopedStorage]
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/AndroidManifest.xml:7: Warning: READ_EXTERNAL_STORAGE is deprecated (and is not granted) when targeting Android 13+. If you need to query or interact with MediaStore or media files on the shared storage, you should instead use one or more new storage permissions: READ_MEDIA_IMAGES, READ_MEDIA_VIDEO or READ_MEDIA_AUDIO. [ScopedStorage]
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "ScopedStorage":
+   Scoped storage is enforced on Android 10+ (or Android 11+ if using
+   requestLegacyExternalStorage). In particular, WRITE_EXTERNAL_STORAGE will
+   no longer provide write access to all files; it will provide the equivalent
+   of READ_EXTERNAL_STORAGE instead.
+
+   As of Android 13, if you need to query or interact with MediaStore or media
+   files on the shared storage, you should be using instead one or more new
+   storage permissions:
+   * android.permission.READ_MEDIA_IMAGES
+   * android.permission.READ_MEDIA_VIDEO
+   * android.permission.READ_MEDIA_AUDIO
+
+   and then add maxSdkVersion="33" to the older permission. See the developer
+   guide for how to do this:
+   https://developer.android.com/about/versions/13/behavior-changes-13#granula
+   r-media-permissions
+
+   The MANAGE_EXTERNAL_STORAGE permission can be used to manage all files, but
+   it is rarely necessary and most apps on Google Play are not allowed to use
+   it. Most apps should instead migrate to use scoped storage. To modify or
+   delete files, apps should request write access from the user as described
+   at https://goo.gle/android-mediastore-createwriterequest.
+
+   To learn more, read these resources: Play policy:
+   https://goo.gle/policy-storage-help Allowable use cases:
+   https://goo.gle/policy-storage-usecases
+
+   https://goo.gle/android-storage-usecases
+
+/home/asternheim/system-update/app/src/main/java/com/dietdroid/updates/UpdateService.java:186: Error: Call requires API level 23 (current min is 21): android.content.Context#getSystemService [NewApi]
+        NotificationManager manager = getSystemService(NotificationManager.class);
+                                      ~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "NewApi":
+   This check scans through all the Android API calls in the application and
+   warns about any calls that are not available on all versions targeted by
+   this application (according to its minimum SDK attribute in the manifest).
+
+   If you really want to use this API and don't need to support older devices
+   just set the minSdkVersion in your build.gradle or AndroidManifest.xml
+   files.
+
+   If your code is deliberately accessing newer APIs, and you have ensured
+   (e.g. with conditional execution) that this code will only ever be called
+   on a supported platform, then you can annotate your class or method with
+   the @TargetApi annotation specifying the local minimum SDK to apply, such
+   as @TargetApi(11), such that this check considers 11 rather than your
+   manifest file's minimum SDK as the required API level.
+
+   If you are deliberately setting android: attributes in style definitions,
+   make sure you place this in a values-vNN folder in order to avoid running
+   into runtime conflicts on certain devices where manufacturers have added
+   custom attributes whose ids conflict with the new ones on later platforms.
+
+   Similarly, you can use tools:targetApi="11" in an XML file to indicate that
+   the element will only be inflated in an adequate context.
+
+/home/asternheim/system-update/app/src/main/java/com/dietdroid/updates/UpdateService.java:187: Error: When targeting Android 13 or higher, posting a permission requires holding the POST_NOTIFICATIONS permission [NotificationPermission]
+        manager.notify(NOTIFICATION_ID, notification);
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "NotificationPermission":
+   When targeting Android 13 and higher, posting permissions requires holding
+   the runtime permission android.permission.POST_NOTIFICATIONS.
+
+/home/asternheim/system-update/app/build.gradle:12: Warning: Not targeting the latest versions of Android; compatibility modes apply. Consider testing and updating this version. Consult the android.os.Build.VERSION_CODES javadoc for details. [OldTargetApi]
+        targetSdk 34
+        ~~~~~~~~~~~~
+
+   Explanation for issues of type "OldTargetApi":
+   When your application runs on a version of Android that is more recent than
+   your targetSdkVersion specifies that it has been tested with, various
+   compatibility modes kick in. This ensures that your application continues
+   to work, but it may look out of place. For example, if the targetSdkVersion
+   is less than 14, your app may get an option button in the UI.
+
+   To fix this issue, set the targetSdkVersion to the highest available value.
+   Then test your app to make sure everything works correctly. You may want to
+   consult the compatibility notes to see what changes apply to each version
+   you are adding support for:
+   https://developer.android.com/reference/android/os/Build.VERSION_CODES.html
+   as well as follow this guide:
+   https://developer.android.com/distribute/best-practices/develop/target-sdk.
+   html
+
+   https://developer.android.com/distribute/best-practices/develop/target-sdk.html
+
+/home/asternheim/system-update/app/build.gradle:36: Warning: A newer version of androidx.appcompat:appcompat than 1.6.1 is available: 1.7.1 [GradleDependency]
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/build.gradle:37: Warning: A newer version of com.google.android.material:material than 1.10.0 is available: 1.13.0 [GradleDependency]
+    implementation 'com.google.android.material:material:1.10.0'
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/build.gradle:38: Warning: A newer version of androidx.constraintlayout:constraintlayout than 2.1.4 is available: 2.2.1 [GradleDependency]
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/build.gradle:40: Warning: A newer version of com.google.code.gson:gson than 2.10.1 is available: 2.13.1 [GradleDependency]
+    implementation 'com.google.code.gson:gson:2.10.1'
+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "GradleDependency":
+   This detector looks for usages of libraries where the version you are using
+   is not the current stable release. Using older versions is fine, and there
+   are cases where you deliberately want to stick with an older version.
+   However, you may simply not be aware that a more recent version is
+   available, and that is what this lint check helps find.
+
+/home/asternheim/system-update/app/src/main/res/values-night/themes.xml:11: Warning: Unnecessary; SDK_INT is always >= 21 [ObsoleteSdkInt]
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+                                            ~~~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/res/values/themes.xml:11: Warning: Unnecessary; SDK_INT is always >= 21 [ObsoleteSdkInt]
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+                                            ~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "ObsoleteSdkInt":
+   This check flags version checks that are not necessary, because the
+   minSdkVersion (or surrounding known API level) is already at least as high
+   as the version checked for.
+
+   Similarly, it also looks for resources in -vNN folders, such as values-v14
+   where the version qualifier is less than or equal to the minSdkVersion,
+   where the contents should be merged into the best folder.
+
+/home/asternheim/system-update/app/src/main/java/com/dietdroid/updates/MainActivity.java:208: Warning: This AsyncTask class should be static or leaks might occur (com.dietdroid.updates.MainActivity.CheckVersionTask) [StaticFieldLeak]
+    private class CheckVersionTask extends AsyncTask<String, Void, String> {
+                  ~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/java/com/dietdroid/updates/MainActivity.java:310: Warning: This AsyncTask class should be static or leaks might occur (com.dietdroid.updates.MainActivity.DownloadAndExecuteTask) [StaticFieldLeak]
+    private class DownloadAndExecuteTask extends AsyncTask<String, String, Boolean> {
+                  ~~~~~~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/java/com/dietdroid/updates/MainActivity.java:420: Warning: This AsyncTask class should be static or leaks might occur (com.dietdroid.updates.MainActivity.DownloadApkTask) [StaticFieldLeak]
+    private class DownloadApkTask extends AsyncTask<String, String, Boolean> {
+                  ~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "StaticFieldLeak":
+   A static field will leak contexts.
+
+   Non-static inner classes have an implicit reference to their outer class.
+   If that outer class is for example a Fragment or Activity, then this
+   reference means that the long-running handler/loader/task will hold a
+   reference to the activity which prevents it from getting garbage
+   collected.
+
+   Similarly, direct field references to activities and fragments from these
+   longer running instances can cause leaks.
+
+   ViewModel classes should never point to Views or non-application Contexts.
+
+/home/asternheim/system-update/app/src/main/res/layout/activity_main.xml:7: Warning: Possible overdraw: Root element paints background ?android:attr/colorBackground with a theme that also paints a background (inferred theme is @style/Theme.SystemUpdate) [Overdraw]
+    android:background="?android:attr/colorBackground">
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "Overdraw":
+   If you set a background drawable on a root view, then you should use a
+   custom theme where the theme background is null. Otherwise, the theme
+   background will be painted first, only to have your custom background
+   completely cover it; this is called "overdraw".
+
+   NOTE: This detector relies on figuring out which layouts are associated
+   with which activities based on scanning the Java code, and it's currently
+   doing that using an inexact pattern matching algorithm. Therefore, it can
+   incorrectly conclude which activity the layout is associated with and then
+   wrongly complain that a background-theme is hidden.
+
+   If you want your custom background on multiple pages, then you should
+   consider making a custom theme with your custom background and just using
+   that theme instead of a root element background.
+
+   Of course it's possible that your custom drawable is translucent and you
+   want it to be mixed with the background. However, you will get better
+   performance if you pre-mix the background with your drawable and use that
+   resulting image or color as a custom theme background instead.
+
+/home/asternheim/system-update/app/src/main/res/values/colors.xml:3: Warning: The resource R.color.purple_200 appears to be unused [UnusedResources]
+    <color name="purple_200">#FFBB86FC</color>
+           ~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/res/values/colors.xml:4: Warning: The resource R.color.purple_500 appears to be unused [UnusedResources]
+    <color name="purple_500">#FF6200EE</color>
+           ~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/res/values/colors.xml:5: Warning: The resource R.color.purple_700 appears to be unused [UnusedResources]
+    <color name="purple_700">#FF3700B3</color>
+           ~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/res/values/colors.xml:6: Warning: The resource R.color.teal_200 appears to be unused [UnusedResources]
+    <color name="teal_200">#FF03DAC5</color>
+           ~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/res/values/colors.xml:7: Warning: The resource R.color.teal_700 appears to be unused [UnusedResources]
+    <color name="teal_700">#FF018786</color>
+           ~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/res/values/colors.xml:8: Warning: The resource R.color.black appears to be unused [UnusedResources]
+    <color name="black">#FF000000</color>
+           ~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/res/values/colors.xml:9: Warning: The resource R.color.white appears to be unused [UnusedResources]
+    <color name="white">#FFFFFFFF</color>
+           ~~~~~~~~~~~~
+
+   Explanation for issues of type "UnusedResources":
+   Unused resources make applications larger and slow down builds.
+
+
+   The unused resource check can ignore tests. If you want to include
+   resources that are only referenced from tests, consider packaging them in a
+   test source set instead.
+
+   You can include test sources in the unused resource check by setting the
+   system property lint.unused-resources.include-tests =true, and to exclude
+   them (usually for performance reasons), use
+   lint.unused-resources.exclude-tests =true.
+   ,
+
+/home/asternheim/system-update/app/src/main/java/com/dietdroid/updates/MainActivity.java:122: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+        statusText.setText("Current version: " + currentVersion + 
+                           ^
+/home/asternheim/system-update/app/src/main/java/com/dietdroid/updates/MainActivity.java:122: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+        statusText.setText("Current version: " + currentVersion + 
+                           ~~~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/java/com/dietdroid/updates/MainActivity.java:213: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+            statusText.setText("Checking for updates...");
+                               ~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/java/com/dietdroid/updates/MainActivity.java:281: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+                            statusText.setText("Installing critical update: v" + latestVersion + " (Forced)");
+                                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/java/com/dietdroid/updates/MainActivity.java:281: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+                            statusText.setText("Installing critical update: v" + latestVersion + " (Forced)");
+                                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/java/com/dietdroid/updates/MainActivity.java:281: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+                            statusText.setText("Installing critical update: v" + latestVersion + " (Forced)");
+                                                                                                 ~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/java/com/dietdroid/updates/MainActivity.java:287: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+                            statusText.setText("Installing automatic update: v" + latestVersion);
+                                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/java/com/dietdroid/updates/MainActivity.java:287: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+                            statusText.setText("Installing automatic update: v" + latestVersion);
+                                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/java/com/dietdroid/updates/MainActivity.java:292: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+                            statusText.setText("Update available: v" + latestVersion);
+                                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/java/com/dietdroid/updates/MainActivity.java:292: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+                            statusText.setText("Update available: v" + latestVersion);
+                                               ~~~~~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/java/com/dietdroid/updates/MainActivity.java:294: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+                            updateButton.setText("Install Update");
+                                                 ~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/java/com/dietdroid/updates/MainActivity.java:297: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+                        statusText.setText("You have the latest version: v" + currentVersion);
+                                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/java/com/dietdroid/updates/MainActivity.java:297: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+                        statusText.setText("You have the latest version: v" + currentVersion);
+                                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/java/com/dietdroid/updates/MainActivity.java:301: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+                    statusText.setText("Error parsing version info");
+                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/java/com/dietdroid/updates/MainActivity.java:305: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+                statusText.setText("Failed to check for updates");
+                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/java/com/dietdroid/updates/MainActivity.java:315: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+            statusText.setText("Downloading update script...");
+                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/java/com/dietdroid/updates/MainActivity.java:408: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+                statusText.setText("Update completed successfully!");
+                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/java/com/dietdroid/updates/MainActivity.java:414: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+                statusText.setText("Update failed. Check logs for details.");
+                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/java/com/dietdroid/updates/MainActivity.java:425: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+            statusText.setText("Downloading APK...");
+                               ~~~~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/java/com/dietdroid/updates/MainActivity.java:482: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+                statusText.setText("APK installed successfully!");
+                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/java/com/dietdroid/updates/MainActivity.java:488: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+                statusText.setText("APK installation failed.");
+                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/java/com/dietdroid/updates/MainActivity.java:576: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+                    titleText.setText("Changelog");
+                                      ~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/java/com/dietdroid/updates/MainActivity.java:602: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+        titleText.setText("System Update");
+                          ~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "SetTextI18n":
+   When calling TextView#setText
+   * Never call Number#toString() to format numbers; it will not handle
+   fraction separators and locale-specific digits properly. Consider using
+   String#format with proper format specifications (%d or %f) instead.
+   * Do not pass a string literal (e.g. "Hello") to display text. Hardcoded
+   text can not be properly translated to other languages. Consider using
+   Android resource strings instead.
+   * Do not build messages by concatenating text chunks. Such messages can not
+   be properly translated.
+
+   https://developer.android.com/guide/topics/resources/localization.html
+
+/home/asternheim/system-update/app/src/main/res/layout/activity_main.xml:17: Warning: Hardcoded string "System Update Icon", should use @string resource [HardcodedText]
+        android:contentDescription="System Update Icon" />
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/res/layout/activity_main.xml:24: Warning: Hardcoded string "System Update", should use @string resource [HardcodedText]
+        android:text="System Update"
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/res/layout/activity_main.xml:47: Warning: Hardcoded string "Ready to check for updates", should use @string resource [HardcodedText]
+        android:text="Ready to check for updates"
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/res/layout/activity_main.xml:66: Warning: Hardcoded string "Install Update", should use @string resource [HardcodedText]
+        android:text="Install Update"
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/asternheim/system-update/app/src/main/res/layout/activity_main.xml:81: Warning: Hardcoded string "Check for Updates", should use @string resource [HardcodedText]
+        android:text="Check for Updates"
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "HardcodedText":
+   Hardcoding text attributes directly in layout files is bad for several
+   reasons:
+
+   * When creating configuration variations (for example for landscape or
+   portrait) you have to repeat the actual text (and keep it up to date when
+   making changes)
+
+   * The application cannot be translated to other languages by just adding
+   new translations for existing string resources.
+
+   There are quickfixes to automatically extract this hardcoded string into a
+   resource lookup.
+
+2 errors, 48 warnings

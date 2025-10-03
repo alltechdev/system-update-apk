@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "com.dietdroid.updates.app-merged_res-31:/layout_activity_main.xml.flat",
+        "source": "com.dietdroid.updates.app-main-32:/layout/activity_main.xml"
+    },
+    {
+        "merged": "/home/asternheim/.gradle/daemon/8.0/com.dietdroid.updates.app-merged_res-31:/layout_activity_main.xml.flat",
+        "source": "/home/asternheim/.gradle/daemon/8.0/com.dietdroid.updates.app-main-32:/layout/activity_main.xml"
+    },
+    {
+        "merged": "/home/asternheim/.gradle/daemon/8.0/com.dietdroid.updates.app-merged_res-31:/xml_data_extraction_rules.xml.flat",
+        "source": "/home/asternheim/.gradle/daemon/8.0/com.dietdroid.updates.app-main-32:/xml/data_extraction_rules.xml"
+    },
+    {
+        "merged": "/home/asternheim/.gradle/daemon/8.0/com.dietdroid.updates.app-merged_res-31:/drawable_ic_system_update.xml.flat",
+        "source": "/home/asternheim/.gradle/daemon/8.0/com.dietdroid.updates.app-main-32:/drawable/ic_system_update.xml"
+    },
+    {
+        "merged": "/home/asternheim/.gradle/daemon/8.0/com.dietdroid.updates.app-merged_res-31:/xml_file_paths.xml.flat",
+        "source": "/home/asternheim/.gradle/daemon/8.0/com.dietdroid.updates.app-main-32:/xml/file_paths.xml"
+    },
+    {
+        "merged": "/home/asternheim/.gradle/daemon/8.0/com.dietdroid.updates.app-merged_res-31:/xml_backup_rules.xml.flat",
+        "source": "/home/asternheim/.gradle/daemon/8.0/com.dietdroid.updates.app-main-32:/xml/backup_rules.xml"
+    }
+]

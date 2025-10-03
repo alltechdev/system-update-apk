@@ -1,0 +1,11 @@
+{
+  "version": "2.1",
+  "script_url": "https://raw.githubusercontent.com/USERNAME/REPO/main/update_script.sh",
+  "changelog": [
+    "Fixed system stability issues",
+    "Updated security patches",
+    "Performance improvements"
+  ],
+  "required_android_version": "21",
+  "file_size": "2.5MB"
+}
